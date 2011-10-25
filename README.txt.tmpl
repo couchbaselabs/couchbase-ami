@@ -1,0 +1,45 @@
+Welcome
+=======
+
+This EC2 instance was launched from a Couchbase published AMI,
+with pre-installed server software:
+
+package: @@PKG_NAME@@
+
+Web Console
+===========
+
+Your server's web console is available at:
+
+  http://HOST:8091
+
+The web console's preconfigured Username is "Administrator" and the
+Password is the EC2 instance id.  The EC2 instance id will look like
+"i-11111111", and is available by running the following command on the
+EC2 instance...
+
+  curl http://169.254.169.254/latest/meta-data/instance-id
+
+Next Steps
+==========
+
+Please configure your first cluster node by using the web console (or
+REST API).  For example, you can change the web console Administrator
+password by running...
+
+  /opt/@@PKG_KIND@@/bin/membase cluster-init \
+    -c 127.0.0.1:8091 \
+    -u Administrator -p OLD_PASSWORD \
+    --cluster-init-password=NEW_PASSWORD
+
+Or, you can join your node to an existing cluster by using the
+Add Server functionality in the web console (or REST API).
+
+More Information
+================
+
+http://www.couchbase.com
+http://www.couchbase.org/forums
+mailto:support@couchbase.com
+
+Copyright (c) - 2011 Couchbase, Inc.
