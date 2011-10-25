@@ -21,7 +21,10 @@ PKG_KIND = membase
 QUOTA_RAM_MB = 1000
 
 image-create: instance-launch \
-              instance-prep instance-install instance-cleanse \
+              instance-prep \
+              instance-install-pkg \
+              instance-install \
+              instance-cleanse \
               instance-image-create
 
 instance-launch:
@@ -39,7 +42,7 @@ instance-launch:
       --instance-initiated-shutdown-behavior stop \
       --group couchbase \
       --key $(SSH_KEY) > instance-describe.out
-	sleep 20
+	sleep 30
 	$(MAKE) instance-describe
 
 instance-describe:
@@ -54,20 +57,26 @@ instance-prep:
 	$(SSH_CMD) -t "grep -q xfs /proc/filesystems || sudo modprobe xfs"
 	echo TODO: EBS volume attachment goes here, 30GB per node?
 
-instance-install:
+instance-install-pkg:
 	$(SSH_CMD) wget -O $(PKG_NAME) $(PKG_BASE)/$(PKG_NAME)
 	$(SSH_CMD) -t sudo rpm -i $(PKG_NAME)
+
+instance-install:
 	sed -e s,@@PKG_NAME@@,$(PKG_NAME),g README.txt.tmpl | \
       sed -e s,@@PKG_KIND@@,$(PKG_KIND),g > README.txt.out
 	scp -i ~/.ssh/$(SSH_KEY).pem README.txt.out \
       ec2-user@$(INSTANCE_HOST):/home/ec2-user/README.txt
-	$(SSH_CMD) -t /opt/membase/bin/membase cluster-init -c 127.0.0.1 \
-      --cluster-init-username=Administrator \
-      --cluster-init-password=$(INSTANCE_ID) \
-      --cluster-init-ramsize=$(QUOTA_RAM_MB)
+	scp -i ~/.ssh/$(SSH_KEY).pem config-pkg \
+      ec2-user@$(INSTANCE_HOST):/home/ec2-user/config-pkg
+	$(SSH_CMD) "echo @reboot /home/ec2-user/config-pkg | crontab -"
 
 instance-cleanse:
-	$(SSH_CMD) rm -f /home/ec2-user/.bash_history /home/ec2-user/.ssh/authorized_keys
+	$(SSH_CMD) rm -f \
+      /home/ec2-user/.bash_history \
+      /home/ec2-user/.ssh/authorized_keys \
+      /home/ec2-user/*.done \
+      /home/ec2-user/*.tmp \
+      /home/ec2-user/*~
 
 instance-image-create:
 	$(EC2_HOME)/bin/ec2-create-image -n $(IMAGE_NAME) $(INSTANCE_ID)
