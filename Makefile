@@ -14,6 +14,7 @@ SSH_KEY = steveyen-key2
 SSH_CMD = ssh -i ~/.ssh/$(SSH_KEY).pem ec2-user@$(INSTANCE_HOST)
 
 IMAGE_NAME = membase-1.7.2_BasicAmazonLinux64-201109
+IMAGE_DESC = pre-installed Membase Server 1.7.2, Enterprise Edition, 64bit
 
 PKG_BASE = http://builds.hq.northscale.net/releases/1.7.2
 PKG_NAME = membase-server-enterprise_x86_64_1.7.2r-20-g6604356.rpm
@@ -21,7 +22,10 @@ PKG_KIND = membase
 
 SECURITY_GROUP = membase
 
-QUOTA_RAM_MB = 1000
+VOLUME_ID = `grep VOLUME volume-describe.out | cut -f 2`
+VOLUME_GB = 100
+
+SNAPSHOT_ID = `grep SNAPSHOT snapshot-describe.out | cut -f 2`
 
 image-create: instance-launch \
               instance-prep \
@@ -81,14 +85,65 @@ instance-cleanse:
       /home/ec2-user/*~
 
 instance-image-create:
-	$(EC2_HOME)/bin/ec2-create-image -n $(IMAGE_NAME) $(INSTANCE_ID)
-
-clean:
-	rm -f instance-describe.out
+	EC2_HOME=$(EC2_HOME) \
+    EC2_PRIVATE_KEY=$(EC2_PRIVATE_KEY) \
+    EC2_CERT=$(EC2_CERT) \
+    EC2_URL=$(EC2_URL) \
+      $(EC2_HOME)/bin/ec2-create-image \
+      --name "$(IMAGE_NAME)" \
+      --description "$(IMAGE_DESC)" \
+      $(INSTANCE_ID)
 
 volume-create:
 	EC2_HOME=$(EC2_HOME) \
     EC2_PRIVATE_KEY=$(EC2_PRIVATE_KEY) \
     EC2_CERT=$(EC2_CERT) \
     EC2_URL=$(EC2_URL) \
-      $(EC2_HOME)/bin/ec2-create-volume -h
+      $(EC2_HOME)/bin/ec2-create-volume \
+      --availability-zone $(EC2_ZONE) \
+      --size $(VOLUME_GB) > volume-describe.out
+
+volume-create-from-snapshot:
+	EC2_HOME=$(EC2_HOME) \
+    EC2_PRIVATE_KEY=$(EC2_PRIVATE_KEY) \
+    EC2_CERT=$(EC2_CERT) \
+    EC2_URL=$(EC2_URL) \
+      $(EC2_HOME)/bin/ec2-create-volume \
+      --availability-zone $(EC2_ZONE) \
+      --size $(VOLUME_GB) \
+      --snapshot $(SNAPSHOT_ID) > volume-describe.out
+
+volume-describe:
+	EC2_HOME=$(EC2_HOME) \
+    EC2_PRIVATE_KEY=$(EC2_PRIVATE_KEY) \
+    EC2_CERT=$(EC2_CERT) \
+    EC2_URL=$(EC2_URL) \
+      $(EC2_HOME)/bin/ec2-describe-volumes $(VOLUME_ID)
+
+volume-attach:
+	EC2_HOME=$(EC2_HOME) \
+    EC2_PRIVATE_KEY=$(EC2_PRIVATE_KEY) \
+    EC2_CERT=$(EC2_CERT) \
+    EC2_URL=$(EC2_URL) \
+      $(EC2_HOME)/bin/ec2-attach-volume $(VOLUME_ID) \
+      --instance $(INSTANCE_ID) \
+      --device /dev/sdh
+
+volume-mount:
+	$(SSH_CMD) -t sudo mkfs.ext3 /dev/sdh
+	$(SSH_CMD) -t sudo mkdir -p /mnt
+	$(SSH_CMD) -t sudo mkdir -m 000 /mnt/vol
+	$(SSH_CMD) -t "echo /dev/sdh /mnt/vol ext3 noatime 0 0 | sudo tee -a /etc/fstab"
+	$(SSH_CMD) -t sudo mount -a
+
+snapshot-create:
+	EC2_HOME=$(EC2_HOME) \
+    EC2_PRIVATE_KEY=$(EC2_PRIVATE_KEY) \
+    EC2_CERT=$(EC2_CERT) \
+    EC2_URL=$(EC2_URL) \
+      $(EC2_HOME)/bin/ec2-create-snapshot $(VOLUME_ID) \
+      --description empty-ext3-$(VOLUME_GB)gb > snapshot-describe.out
+
+clean:
+	rm -f *.out
+
