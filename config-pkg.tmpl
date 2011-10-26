@@ -8,11 +8,11 @@ crontab -r
 
 sudo /etc/init.d/@@PKG_KIND@@-server stop
 
-sudo mkdir -p /mnt/vol/@@PKG_KIND@@
-sudo chown @@PKG_KIND@@:@@PKG_KIND@@ /mnt/vol/@@PKG_KIND@@
-sudo mv /opt/@@PKG_KIND@@/var /mnt/vol/@@PKG_KIND@@/
-sudo ln -s /mnt/vol/@@PKG_KIND@@/var /opt/@@PKG_KIND@@/var
-sudo chown @@PKG_KIND@@:@@PKG_KIND@@ /opt/@@PKG_KIND@@/var
+sudo mkdir -p /mnt/ebs/db
+sudo chown @@PKG_KIND@@:@@PKG_KIND@@ /mnt/ebs/db
+sudo mv /opt/@@PKG_KIND@@/var /mnt/ebs/db
+sudo ln -s /mnt/ebs/db/var /opt/@@PKG_KIND@@/var
+sudo chown -h @@PKG_KIND@@:@@PKG_KIND@@ /opt/@@PKG_KIND@@/var
 
 sudo /etc/init.d/@@PKG_KIND@@-server start
 
