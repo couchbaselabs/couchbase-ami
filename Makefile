@@ -72,17 +72,22 @@ instance-describe:
 instance-prep:
 	$(SSH_CMD) -t sudo yum -y install openssl098e gcc gdb iotop sysstat systemtap emacs
 	$(SSH_CMD) -t "grep -q xfs /proc/filesystems || sudo modprobe xfs"
-	echo TODO: EBS volume attachment goes here, 30GB per node?
+	$(SSH_CMD) -t dd if=/dev/zero of=/swapfile bs=1024 count=1048576
+	$(SSH_CMD) -t mkswap /swapfile
+	$(SSH_CMD) -t "echo /swapfile none swap defaults 0 0 >> /etc/fstab"
+	$(SSH_CMD) -t swapon -a
 
 instance-install-pkg:
 	$(SSH_CMD) wget -O $(PKG_NAME) $(PKG_BASE)/$(PKG_NAME)
 	$(SSH_CMD) -t sudo rpm -i $(PKG_NAME)
+	$(SSH_CMD) -t sudo /opt/$(PKG_KIND)/bin/mbenable-core-dumps.sh /tmp
 
 instance-install:
 	sed -e s,@@PKG_NAME@@,$(PKG_NAME),g README.txt.tmpl | \
       sed -e s,@@PKG_KIND@@,$(PKG_KIND),g > README.txt.out
 	sed -e s,@@PKG_NAME@@,$(PKG_NAME),g config-pkg.tmpl | \
       sed -e s,@@PKG_KIND@@,$(PKG_KIND),g > config-pkg.out
+	chmod a+x config-pkg.out
 	scp -i ~/.ssh/$(SSH_KEY).pem README.txt.out \
       ec2-user@$(INSTANCE_HOST):/home/ec2-user/README.txt
 	scp -i ~/.ssh/$(SSH_KEY).pem config-pkg.out \
@@ -140,6 +145,7 @@ volume-attach:
       $(EC2_HOME)/bin/ec2-attach-volume $(VOLUME_ID) \
       --instance $(INSTANCE_ID) \
       --device /dev/sdh
+	sleep 10
 
 volume-mkfs:
 	$(SSH_CMD) -t sudo mkfs.ext3 /dev/sdh
