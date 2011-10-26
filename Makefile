@@ -61,6 +61,7 @@ instance-launch:
       --key $(SSH_KEY) > instance-describe.out
 	sleep 30
 	$(MAKE) instance-describe
+	cat instance-describe.out
 
 instance-describe:
 	EC2_HOME=$(EC2_HOME) \
