@@ -1,0 +1,20 @@
+#!/bin/sh
+
+crontab -r
+
+/opt/@@PKG_KIND@@/bin/membase cluster-init -c 127.0.0.1 \
+    --cluster-init-username=Administrator \
+    --cluster-init-password=`curl http://169.254.169.254/latest/meta-data/instance-id`
+
+sudo /etc/init.d/@@PKG_KIND@@-server stop
+
+sudo mkdir -p /mnt/vol/@@PKG_KIND@@
+sudo chown @@PKG_KIND@@:@@PKG_KIND@@ /mnt/vol/@@PKG_KIND@@
+sudo mv /opt/@@PKG_KIND@@/var /mnt/vol/@@PKG_KIND@@/
+sudo ln -s /mnt/vol/@@PKG_KIND@@/var /opt/@@PKG_KIND@@/var
+sudo chown @@PKG_KIND@@:@@PKG_KIND@@ /opt/@@PKG_KIND@@/var
+
+sudo /etc/init.d/@@PKG_KIND@@-server start
+
+rm -f config-pkg
+

@@ -81,9 +81,11 @@ instance-install-pkg:
 instance-install:
 	sed -e s,@@PKG_NAME@@,$(PKG_NAME),g README.txt.tmpl | \
       sed -e s,@@PKG_KIND@@,$(PKG_KIND),g > README.txt.out
+	sed -e s,@@PKG_NAME@@,$(PKG_NAME),g config-pkg.tmpl | \
+      sed -e s,@@PKG_KIND@@,$(PKG_KIND),g > config-pkg.out
 	scp -i ~/.ssh/$(SSH_KEY).pem README.txt.out \
       ec2-user@$(INSTANCE_HOST):/home/ec2-user/README.txt
-	scp -i ~/.ssh/$(SSH_KEY).pem config-pkg \
+	scp -i ~/.ssh/$(SSH_KEY).pem config-pkg.out \
       ec2-user@$(INSTANCE_HOST):/home/ec2-user/config-pkg
 	$(SSH_CMD) "echo @reboot /home/ec2-user/config-pkg | crontab -"
 
@@ -144,8 +146,8 @@ volume-mkfs:
 
 volume-mount:
 	$(SSH_CMD) -t sudo mkdir -p /mnt
-	$(SSH_CMD) -t sudo mkdir -m 000 /mnt/vol
-	$(SSH_CMD) -t "echo /dev/sdh /mnt/vol ext3 noatime 0 0 | sudo tee -a /etc/fstab"
+	$(SSH_CMD) -t sudo mkdir -m 000 /mnt/ebs
+	$(SSH_CMD) -t "echo /dev/sdh /mnt/ebs ext3 noatime 0 0 | sudo tee -a /etc/fstab"
 	$(SSH_CMD) -t sudo mount -a
 
 snapshot-create:
