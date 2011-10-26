@@ -1,7 +1,8 @@
 
 EC2_HOME        = ./ec2-api-tools-1.4.4.2
-EC2_PRIVATE_KEY = ~/.ec2/pk-LNGJGIFNQUNA6GWNURZFDKGB6CLJ7M4W.pem
-EC2_CERT        = ~/.ec2/cert-LNGJGIFNQUNA6GWNURZFDKGB6CLJ7M4W.pem
+EC2_PRIVATE_KEY = ~/.ec2/couchbase_aws-marketplace/pk-RPGT6DCSVXNK5QWMHAACI3KUHN5ILKOX.pem
+EC2_CERT        = ~/.ec2/couchbase_aws-marketplace/cert-RPGT6DCSVXNK5QWMHAACI3KUHN5ILKOX.pem
+EC2_ZONE        = us-east-1c
 EC2_URL         = https://ec2.us-east-1.amazonaws.com
 AMI_ID          = ami-7341831a
 
@@ -9,7 +10,7 @@ INSTANCE_TYPE = m1.xlarge
 INSTANCE_HOST = `grep INSTANCE instance-describe.out | cut -f 4`
 INSTANCE_ID   = `grep INSTANCE instance-describe.out | cut -f 2`
 
-SSH_KEY = steveyen-key
+SSH_KEY = steveyen-key2
 SSH_CMD = ssh -i ~/.ssh/$(SSH_KEY).pem ec2-user@$(INSTANCE_HOST)
 
 IMAGE_NAME = membase-1.7.2_BasicAmazonLinux64-201109
@@ -17,6 +18,8 @@ IMAGE_NAME = membase-1.7.2_BasicAmazonLinux64-201109
 PKG_BASE = http://builds.hq.northscale.net/releases/1.7.2
 PKG_NAME = membase-server-enterprise_x86_64_1.7.2r-20-g6604356.rpm
 PKG_KIND = membase
+
+SECURITY_GROUP = membase
 
 QUOTA_RAM_MB = 1000
 
@@ -37,10 +40,10 @@ instance-launch:
       --block-device-mapping /dev/sdc=ephemeral1 \
       --block-device-mapping /dev/sdd=ephemeral2 \
       --block-device-mapping /dev/sde=ephemeral3 \
-      --availability-zone us-east-1d \
+      --availability-zone $(EC2_ZONE) \
       --instance-type $(INSTANCE_TYPE) \
       --instance-initiated-shutdown-behavior stop \
-      --group couchbase \
+      --group $(SECURITY_GROUP) \
       --key $(SSH_KEY) > instance-describe.out
 	sleep 30
 	$(MAKE) instance-describe
@@ -74,7 +77,6 @@ instance-cleanse:
 	$(SSH_CMD) rm -f \
       /home/ec2-user/.bash_history \
       /home/ec2-user/.ssh/authorized_keys \
-      /home/ec2-user/*.done \
       /home/ec2-user/*.tmp \
       /home/ec2-user/*~
 
@@ -83,3 +85,10 @@ instance-image-create:
 
 clean:
 	rm -f instance-describe.out
+
+volume-create:
+	EC2_HOME=$(EC2_HOME) \
+    EC2_PRIVATE_KEY=$(EC2_PRIVATE_KEY) \
+    EC2_CERT=$(EC2_CERT) \
+    EC2_URL=$(EC2_URL) \
+      $(EC2_HOME)/bin/ec2-create-volume -h
