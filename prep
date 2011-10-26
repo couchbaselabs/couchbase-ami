@@ -1,0 +1,10 @@
+#!/bin/sh
+
+yum -y install openssl098e gcc gdb iotop sysstat systemtap emacs
+grep -q xfs /proc/filesystems || modprobe xfs
+dd if=/dev/zero of=/swapfile bs=1024 count=524288
+mkswap /swapfile
+echo /swapfile none swap defaults 0 0 >> /etc/fstab
+swapon -a
+
+rm -f prep

@@ -70,12 +70,9 @@ instance-describe:
       $(EC2_HOME)/bin/ec2-describe-instances $(INSTANCE_ID) > instance-describe.out
 
 instance-prep:
-	$(SSH_CMD) -t sudo yum -y install openssl098e gcc gdb iotop sysstat systemtap emacs
-	$(SSH_CMD) -t "grep -q xfs /proc/filesystems || sudo modprobe xfs"
-	$(SSH_CMD) -t dd if=/dev/zero of=/swapfile bs=1024 count=1048576
-	$(SSH_CMD) -t mkswap /swapfile
-	$(SSH_CMD) -t "echo /swapfile none swap defaults 0 0 >> /etc/fstab"
-	$(SSH_CMD) -t swapon -a
+	scp -i ~/.ssh/$(SSH_KEY).pem prep \
+      ec2-user@$(INSTANCE_HOST):/home/ec2-user/prep
+	$(SSH_CMD) -t sudo /home/ec2-user/prep
 
 instance-install-pkg:
 	$(SSH_CMD) wget -O $(PKG_NAME) $(PKG_BASE)/$(PKG_NAME)
