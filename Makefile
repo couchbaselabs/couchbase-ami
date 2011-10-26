@@ -69,6 +69,7 @@ instance-describe:
     EC2_CERT=$(EC2_CERT) \
     EC2_URL=$(EC2_URL) \
       $(EC2_HOME)/bin/ec2-describe-instances $(INSTANCE_ID) > instance-describe.out
+	cat instance-describe.out
 
 instance-prep:
 	scp -i ~/.ssh/$(SSH_KEY).pem prep \
