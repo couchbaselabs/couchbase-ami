@@ -27,12 +27,22 @@ VOLUME_GB = 100
 
 SNAPSHOT_ID = `grep SNAPSHOT snapshot-describe.out | cut -f 2`
 
-image-create: instance-launch \
-              instance-prep \
-              instance-install-pkg \
-              instance-install \
-              instance-cleanse \
-              instance-image-create
+image-create-step0: \
+    instance-launch
+
+image-create-step1: \
+    instance-prep \
+    instance-install-pkg \
+    instance-install \
+    volume-create \
+    volume-attach \
+    volume-mkfs \
+    snapshot-create \
+    volume-mount
+
+image-create-step2: \
+    instance-cleanse \
+    instance-image-create
 
 instance-launch:
 	EC2_HOME=$(EC2_HOME) \
@@ -129,8 +139,10 @@ volume-attach:
       --instance $(INSTANCE_ID) \
       --device /dev/sdh
 
-volume-mount:
+volume-mkfs:
 	$(SSH_CMD) -t sudo mkfs.ext3 /dev/sdh
+
+volume-mount:
 	$(SSH_CMD) -t sudo mkdir -p /mnt
 	$(SSH_CMD) -t sudo mkdir -m 000 /mnt/vol
 	$(SSH_CMD) -t "echo /dev/sdh /mnt/vol ext3 noatime 0 0 | sudo tee -a /etc/fstab"
