@@ -78,7 +78,7 @@ instance-prep:
 instance-install-pkg:
 	$(SSH_CMD) wget -O $(PKG_NAME) $(PKG_BASE)/$(PKG_NAME)
 	$(SSH_CMD) -t sudo rpm -i $(PKG_NAME)
-	$(SSH_CMD) -t sudo /opt/$(PKG_KIND)/bin/mbenable-core-dumps.sh /tmp
+	$(SSH_CMD) -t sudo /opt/$(PKG_KIND)/bin/mbenable_core_dumps.sh /tmp
 
 instance-install:
 	sed -e s,@@PKG_NAME@@,$(PKG_NAME),g README.txt.tmpl | \
