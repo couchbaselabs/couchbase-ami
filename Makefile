@@ -32,8 +32,6 @@ image-create-step0: \
 
 image-create-step1: \
     instance-prep \
-    instance-install-pkg \
-    instance-install \
     volume-create \
     volume-attach \
     volume-mkfs \
@@ -75,13 +73,7 @@ instance-prep:
 	scp -i ~/.ssh/$(SSH_KEY).pem prep \
       ec2-user@$(INSTANCE_HOST):/home/ec2-user/prep
 	$(SSH_CMD) -t sudo /home/ec2-user/prep
-
-instance-install-pkg:
 	$(SSH_CMD) wget -O $(PKG_NAME) $(PKG_BASE)/$(PKG_NAME)
-	$(SSH_CMD) -t sudo rpm -i $(PKG_NAME)
-	$(SSH_CMD) -t sudo /opt/$(PKG_KIND)/bin/mbenable_core_dumps.sh /tmp
-
-instance-install:
 	sed -e s,@@PKG_NAME@@,$(PKG_NAME),g README.txt.tmpl | \
       sed -e s,@@PKG_KIND@@,$(PKG_KIND),g > README.txt.out
 	sed -e s,@@PKG_NAME@@,$(PKG_NAME),g config-pkg.tmpl | \
@@ -91,7 +83,8 @@ instance-install:
       ec2-user@$(INSTANCE_HOST):/home/ec2-user/README.txt
 	scp -i ~/.ssh/$(SSH_KEY).pem config-pkg.out \
       ec2-user@$(INSTANCE_HOST):/home/ec2-user/config-pkg
-	$(SSH_CMD) "echo @reboot /home/ec2-user/config-pkg | crontab -"
+	scp -i ~/.ssh/$(SSH_KEY).pem config-pkg.conf \
+      ec2-user@$(INSTANCE_HOST):/home/ec2-user/config-pkg.conf
 
 instance-cleanse:
 	$(SSH_CMD) rm -f \

@@ -1,10 +1,17 @@
 #!/bin/sh
 
-crontab -r
+cd /home/ec2-user
+
+sudo rpm -i *base-server-enterprise_x86_64_*.rpm
+sudo /opt/@@PKG_KIND@@/bin/mbenable_core_dumps.sh /tmp
+
+sleep 3
 
 /opt/@@PKG_KIND@@/bin/membase cluster-init -c 127.0.0.1 \
     --cluster-init-username=Administrator \
     --cluster-init-password=`curl http://169.254.169.254/latest/meta-data/instance-id`
+
+sleep 3
 
 sudo /etc/init.d/@@PKG_KIND@@-server stop
 
@@ -16,5 +23,4 @@ sudo chown -h @@PKG_KIND@@:@@PKG_KIND@@ /opt/@@PKG_KIND@@/var
 
 sudo /etc/init.d/@@PKG_KIND@@-server start
 
-rm -f config-pkg
 
