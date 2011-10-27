@@ -85,6 +85,8 @@ instance-prep:
       ec2-user@$(INSTANCE_HOST):/home/ec2-user/config-pkg
 	scp -i ~/.ssh/$(SSH_KEY).pem config-pkg.conf \
       ec2-user@$(INSTANCE_HOST):/home/ec2-user/config-pkg.conf
+	$(SSH_CMD) -t sudo cp /home/ec2-user/config-pkg.conf /etc/init/config-pkg.conf
+	$(SSH_CMD) -t sudo chown root:root /etc/init/config-pkg.conf
 
 instance-cleanse:
 	$(SSH_CMD) rm -f \
