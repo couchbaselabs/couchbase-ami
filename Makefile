@@ -83,10 +83,9 @@ instance-prep:
       ec2-user@$(INSTANCE_HOST):/home/ec2-user/README.txt
 	scp -i ~/.ssh/$(SSH_KEY).pem config-pkg.out \
       ec2-user@$(INSTANCE_HOST):/home/ec2-user/config-pkg
-	scp -i ~/.ssh/$(SSH_KEY).pem config-pkg.conf \
-      ec2-user@$(INSTANCE_HOST):/home/ec2-user/config-pkg.conf
-	$(SSH_CMD) -t sudo cp /home/ec2-user/config-pkg.conf /etc/init/config-pkg.conf
-	$(SSH_CMD) -t sudo chown root:root /etc/init/config-pkg.conf
+	$(SSH_CMD) -t sudo mkdir -p /var/lib/cloud/data/scripts
+	$(SSH_CMD) -t sudo cp /home/ec2-user/config-pkg /var/lib/cloud/data/scripts/config-pkg
+	$(SSH_CMD) -t sudo chown root:root /var/lib/cloud/data/scripts/config-pkg
 
 instance-cleanse:
 	$(SSH_CMD) rm -f \
