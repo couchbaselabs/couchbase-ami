@@ -1,21 +1,22 @@
-#!/bin/sh
+#!/bin/sh -e
 
 if [ ! -d /opt/*base ]; then
   cd /home/ec2-user
-  rpm -i *base-server-enterprise_x86_64_*.rpm
-  /opt/@@PKG_KIND@@/bin/mbenable_core_dumps.sh /tmp
+  rpm -i *base-server-enterprise_x86_64_*.rpm 2>&1 >> config-pkg.out
+  /opt/@@PKG_KIND@@/bin/mbenable_core_dumps.sh /tmp 2>&1 >> config-pkg.out
   sleep 3
   /opt/@@PKG_KIND@@/bin/membase cluster-init -c 127.0.0.1 \
     --cluster-init-username=Administrator \
-    --cluster-init-password=`curl http://169.254.169.254/latest/meta-data/instance-id`
+    --cluster-init-password=`curl http://169.254.169.254/latest/meta-data/instance-id` \
+    2>&1 >> config-pkg.out
   sleep 3
-  /etc/init.d/@@PKG_KIND@@-server stop
-  mkdir -p /mnt/ebs/db
-  chown @@PKG_KIND@@:@@PKG_KIND@@ /mnt/ebs/db
-  mv /opt/@@PKG_KIND@@/var /mnt/ebs/db
-  ln -s /mnt/ebs/db/var /opt/@@PKG_KIND@@/var
-  chown -h @@PKG_KIND@@:@@PKG_KIND@@ /opt/@@PKG_KIND@@/var
-  /etc/init.d/@@PKG_KIND@@-server start
+  /etc/init.d/@@PKG_KIND@@-server stop 2>&1 >> config-pkg.out
+  mkdir -p /mnt/ebs/db 2>&1 >> config-pkg.out
+  chown @@PKG_KIND@@:@@PKG_KIND@@ /mnt/ebs/db 2>&1 >> config-pkg.out
+  mv /opt/@@PKG_KIND@@/var /mnt/ebs/db 2>&1 >> config-pkg.out
+  ln -s /mnt/ebs/db/var /opt/@@PKG_KIND@@/var 2>&1 >> config-pkg.out
+  chown -h @@PKG_KIND@@:@@PKG_KIND@@ /opt/@@PKG_KIND@@/var 2>&1 >> config-pkg.out
+  /etc/init.d/@@PKG_KIND@@-server start 2>&1 >> config-pkg.out
   rm -f /etc/init/config-pkg.conf
 fi
 
