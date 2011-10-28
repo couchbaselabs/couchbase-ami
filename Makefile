@@ -13,7 +13,7 @@ INSTANCE_ID   = `grep INSTANCE instance-describe.out | cut -f 2`
 SSH_KEY = steveyen-key2
 SSH_CMD = ssh -i ~/.ssh/$(SSH_KEY).pem ec2-user@$(INSTANCE_HOST)
 
-IMAGE_NAME = membase-1.7.2_BasicAmazonLinux64-201109
+IMAGE_NAME = `git describe`_BasicAmazonLinux64-201109
 IMAGE_DESC = pre-installed Membase Server 1.7.2, Enterprise Edition, 64bit
 
 PKG_BASE = http://builds.hq.northscale.net/releases/1.7.2
