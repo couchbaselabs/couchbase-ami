@@ -34,7 +34,7 @@ First, clean up from previous attempts...
 
 Then, use step 0, which should launch an new EC2 instance.
 
-    make SSH_KEY=steveyen-key2 image-create-step0
+    make SSH_KEY=steveyen-key2 step0
 
 If that takes longer than usual (because EC2 cloud is impacted), then repeat the following command untill you finally see some ec2-xxxxxx.compute-1.amazonaws.com addresses in the output...
 
@@ -46,10 +46,13 @@ You'll want to see output lines that look like...
 
 Then, go to the next step...
 
-    make SSH_KEY=steveyen-key2 image-create-step1
+    make SSH_KEY=steveyen-key2 step1
 
 Then, go to the next step...
 
-    make SSH_KEY=steveyen-key2 image-create-step2
+    make SSH_KEY=steveyen-key2 step2
 
-You should now have an AMI that's AWS / ISV Marketplace ready.
+You should now have an AMI that's AWS / ISV Marketplace ready.  But,
+it might take a few minutes for AWS to finish building it (moving it
+out of 'pending' state -- have patience).
+

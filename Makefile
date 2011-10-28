@@ -27,10 +27,10 @@ VOLUME_GB = 100
 
 SNAPSHOT_ID = `grep SNAPSHOT snapshot-describe.out | cut -f 2`
 
-image-create-step0: \
+step0: \
     instance-launch
 
-image-create-step1: \
+step1: \
     instance-prep \
     volume-create \
     volume-attach \
@@ -38,7 +38,7 @@ image-create-step1: \
     snapshot-create \
     volume-mount
 
-image-create-step2: \
+step2: \
     instance-cleanse \
     instance-image-create
 
