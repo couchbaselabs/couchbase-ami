@@ -1,0 +1,79 @@
+= Usage Instructions
+
+== 5 Minute AMI Test Drive
+
+After launching an EC2 instance, you probably may be interested in
+test driving your new database installation.  The steps are easy.
+Below, HOST is the address of your newly launched EC2 instance.
+
+First, please log into the server's web console, using your web
+browser, at the following URL:
+
+  http://HOST:8091
+
+The Username/Password will be:
+
+  Username: Administrator
+  Password: <your EC2 instance id>
+
+NOTE: Changing the web console's Password is easy, but is described
+elsewhere in the full product documentation.  Please see the More
+Information section below.
+
+Next, please create a "default" bucket on your new server by using the
+following screen:
+
+  MANAGE -> Data Buckets -> Create New Data Bucket
+
+In the pop-up dialog box, please enter in "default" for the bucket
+name and click "Create".  (For now, just accept the other default
+parameters in the dialog box.)
+
+Next, let's generate some synthetic test requests.
+
+SSH onto your EC2 instance, such as by using:
+
+  ssh -i your-ssh-key.pem ec2-user@HOST
+
+In your SSH session, you can generate test requests against the
+default bucket by running:
+
+  /opt/membase/bin/memcachetest -l
+
+Next, let's monitor your database performance.
+
+In your web console, navigate to the following screen to see the
+online performance graphs:
+
+  MONITOR -> Data Buckets -> "default"
+
+== Ports and Security Groups
+
+If you are creating your own Security Group, the following TCP ports
+and port ranges should be opened for inbound connections from your web
+application servers and other server nodes (for clustering), via
+Source CIDR / IP filtering or Security Group filtering.  That is,
+these ports should not be opened for general internet access.
+
+* 4369
+* 5984
+* 8091
+* 11210
+* 11211
+* port range: 21100 to 21299
+
+== README.txt
+
+More information about your AMI and its pre-installed software is
+available in following file on your EC2 instance:
+
+  /home/ec2-user/README.txt
+
+== More Information
+
+http://www.couchbase.com
+http://www.couchbase.org/forums
+mailto:support@couchbase.com
+
+Copyright (c) 2011 Couchbase, Inc.
+

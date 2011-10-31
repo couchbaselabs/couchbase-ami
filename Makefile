@@ -4,6 +4,8 @@ EC2_PRIVATE_KEY = ~/.ec2/couchbase_aws-marketplace/pk-RPGT6DCSVXNK5QWMHAACI3KUHN
 EC2_CERT        = ~/.ec2/couchbase_aws-marketplace/cert-RPGT6DCSVXNK5QWMHAACI3KUHN5ILKOX.pem
 EC2_ZONE        = us-east-1c
 EC2_URL         = https://ec2.us-east-1.amazonaws.com
+
+# The seed AMI is Basic Amazon Linux 64-bit 2011.09
 AMI_ID          = ami-7341831a
 
 INSTANCE_TYPE = m1.xlarge
@@ -13,7 +15,7 @@ INSTANCE_ID   = `grep INSTANCE instance-describe.out | cut -f 2`
 SSH_KEY = steveyen-key2
 SSH_CMD = ssh -i ~/.ssh/$(SSH_KEY).pem ec2-user@$(INSTANCE_HOST)
 
-IMAGE_NAME = `git describe`_BasicAmazonLinux64-201109
+IMAGE_NAME = `git describe`
 IMAGE_DESC = pre-installed Membase Server 1.7.2, Enterprise Edition, 64bit
 
 PKG_BASE = http://builds.hq.northscale.net/releases/1.7.2
