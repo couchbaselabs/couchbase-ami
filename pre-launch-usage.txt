@@ -2,11 +2,11 @@
 
 == 5 Minute AMI Test Drive
 
-After launching an EC2 instance, you probably may be interested in
-test driving your new database installation.  The steps are easy.
-Below, HOST is the address of your newly launched EC2 instance.
+After launching an EC2 instance, you may be interested in test driving
+your new database node.  The steps are easy.  Below, HOST is the
+DNS or IP address of your newly launched EC2 instance.
 
-First, please log into the server's web console, using your web
+First, please log into your new server's web console, using your web
 browser, at the following URL:
 
   http://HOST:8091
@@ -16,18 +16,17 @@ The Username/Password will be:
   Username: Administrator
   Password: <your EC2 instance id>
 
-NOTE: Changing the web console's Password is easy, but is described
-elsewhere in the full product documentation.  Please see the More
-Information section below.
+NOTE: Changing the web console's Password is easy.  Please see the
+README.txt and More Information sections below.
 
 Next, please create a "default" bucket on your new server by using the
-following screen:
+following web console screen:
 
   MANAGE -> Data Buckets -> Create New Data Bucket
 
-In the pop-up dialog box, please enter in "default" for the bucket
-name and click "Create".  (For now, just accept the other default
-parameters in the dialog box.)
+In the following pop-up dialog box, please enter in "default" for the
+bucket name and click "Create".  (For now, just accept the other
+default parameters in the dialog box.)
 
 Next, let's generate some synthetic test requests.
 
@@ -46,6 +45,9 @@ In your web console, navigate to the following screen to see the
 online performance graphs:
 
   MONITOR -> Data Buckets -> "default"
+
+In the various graphs, there's lots of interesting information to
+drill into.
 
 == Ports and Security Groups
 
