@@ -21,6 +21,14 @@ Get the pk/cert for the marketplace-related AWS account.  They'll need to live a
     ~/.ec2/couchbase_aws-marketplace/pk-RPGT6DCSVXNK5QWMHAACI3KUHN5ILKOX.pem
     ~/.ec2/couchbase_aws-marketplace/cert-RPGT6DCSVXNK5QWMHAACI3KUHN5ILKOX.pem
 
+If your private keys and certs are in a different place, you can
+override them by specifying them as KEY=value parameters to the make
+command...
+
+    make EC2_PRIVATE_KEY=MyLocationToPrivateKeyPEMFile \
+         EC2_CERT=MyLocationToPrivateKeyPEMFile \
+         clean
+
 Get your ssh key so you can login into the EC2 instances.  These
 usually will live in the ~/.ssh directory on your computer.  For example, mine is at...
 
