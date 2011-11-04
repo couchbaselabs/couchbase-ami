@@ -48,9 +48,14 @@ Then, go to the next step...
 
     make SSH_KEY=steveyen-key2 step1
 
-Then, go to the next step...
+Then, go to the next step, etc...
 
     make SSH_KEY=steveyen-key2 step2
+    make SSH_KEY=steveyen-key2 step3
+    make SSH_KEY=steveyen-key2 step4
+
+NOTE: If you don't want the package pre-installed on the AMI, such as
+to just get an empty, but ready, AMI, then just skep step2.
 
 You should now have an AMI that's AWS / ISV Marketplace ready.  But,
 it might take a few minutes for AWS to finish building it (moving it

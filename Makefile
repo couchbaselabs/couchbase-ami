@@ -33,14 +33,19 @@ step0: \
     instance-launch
 
 step1: \
-    instance-prep \
+    instance-prep
+
+step2: \
+    instance-prep-pkg
+
+step3: \
     volume-create \
     volume-attach \
     volume-mkfs \
     snapshot-create \
     volume-mount
 
-step2: \
+step4: \
     instance-cleanse \
     instance-image-create
 
@@ -75,6 +80,8 @@ instance-prep:
 	scp -i ~/.ssh/$(SSH_KEY).pem prep \
       ec2-user@$(INSTANCE_HOST):/home/ec2-user/prep
 	$(SSH_CMD) -t sudo /home/ec2-user/prep
+
+instance-prep-pkg:
 	$(SSH_CMD) wget -O $(PKG_NAME) $(PKG_BASE)/$(PKG_NAME)
 	sed -e s,@@PKG_NAME@@,$(PKG_NAME),g README.txt.tmpl | \
       sed -e s,@@PKG_KIND@@,$(PKG_KIND),g > README.txt.out
