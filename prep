@@ -1,6 +1,6 @@
 #!/bin/sh
 
-yum -y install openssl098e gcc gdb iotop sysstat systemtap telnet emacs
+yum -y install openssl098e gcc gdb iotop sysstat systemtap telnet emacs screen
 grep -q xfs /proc/filesystems || modprobe xfs
 dd if=/dev/zero of=/swapfile bs=1024 count=524288
 mkswap /swapfile
