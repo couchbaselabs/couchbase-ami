@@ -1,7 +1,10 @@
 #!/bin/sh
 
-yum -y install openssl098e gcc gdb iotop sysstat systemtap telnet emacs screen
+yum -y install openssl098e gcc gdb iotop sysstat systemtap telnet emacs git python-paramiko screen
 grep -q xfs /proc/filesystems || modprobe xfs
+
+# 512 MB count=524288
+# 1 GB count=1048576 
 dd if=/dev/zero of=/swapfile bs=1024 count=524288
 mkswap /swapfile
 echo /swapfile none swap defaults 0 0 >> /etc/fstab
