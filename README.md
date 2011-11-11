@@ -63,9 +63,14 @@ Then, go to the next step, etc...
     make SSH_KEY=steveyen-key2 step4
 
 NOTE: If you don't want the package pre-installed on the AMI, such as
-to just get an empty, but ready, AMI, then just skep step2.
+to just get an empty-but-ready AMI for QE/testing, then just skip
+step2.
 
 You should now have an AMI that's AWS / ISV Marketplace ready.  But,
 it might take a few minutes for AWS to finish building it (moving it
 out of 'pending' state -- have patience).
 
+# Other Hints:
+
+If you're doing an updated AMI due to a new software release,
+be sure to scrub any README's for changes, etc.
