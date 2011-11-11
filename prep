@@ -4,8 +4,9 @@ yum -y install openssl098e gcc gdb iotop sysstat systemtap telnet emacs git pyth
 grep -q xfs /proc/filesystems || modprobe xfs
 
 # 512 MB count=524288
-# 1 GB count=1048576 
-dd if=/dev/zero of=/swapfile bs=1024 count=524288
+# 1 GB count=1048576
+# the script will create 4 GB swap
+dd if=/dev/zero of=/swapfile bs=1024 count=4194304
 mkswap /swapfile
 echo /swapfile none swap defaults 0 0 >> /etc/fstab
 swapon -a
