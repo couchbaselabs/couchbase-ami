@@ -97,11 +97,15 @@ instance-prep-pkg:
 	$(SSH_CMD) -t sudo chown root:root /var/lib/cloud/data/scripts/config-pkg
 
 instance-cleanse:
-	$(SSH_CMD) rm -f \
+	$(SSH_CMD) -t sudo rm -f \
       /home/ec2-user/.bash_history \
       /home/ec2-user/.ssh/authorized_keys \
       /home/ec2-user/*.tmp \
       /home/ec2-user/*~
+      /root/.bash_history \
+      /root/.ssh/authorized_keys \
+      /root/*.tmp \
+      /root/*~
 
 instance-image-create:
 	EC2_HOME=$(EC2_HOME) \
