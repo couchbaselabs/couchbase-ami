@@ -70,6 +70,11 @@ You should now have an AMI that's AWS / ISV Marketplace ready.  But,
 it might take a few minutes for AWS to finish building it (moving it
 out of 'pending' state -- have patience).
 
+Finally, for an AMI meant for the AWS / ISV Marketplace, grant
+permission for AWS to access it...
+
+    grant access to aws # 6795-9333-3241
+
 # Other Hints:
 
 If you're doing an updated AMI due to a new software release,
