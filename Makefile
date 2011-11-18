@@ -101,7 +101,7 @@ instance-cleanse:
       /home/ec2-user/.bash_history \
       /home/ec2-user/.ssh/authorized_keys \
       /home/ec2-user/*.tmp \
-      /home/ec2-user/*~
+      /home/ec2-user/*~ \
       /root/.bash_history \
       /root/.ssh/authorized_keys \
       /root/*.tmp \
