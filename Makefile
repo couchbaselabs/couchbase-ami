@@ -16,14 +16,14 @@ SSH_KEY = steveyen-key2
 SSH_CMD = ssh -i ~/.ssh/$(SSH_KEY).pem ec2-user@$(INSTANCE_HOST)
 
 IMAGE_NAME = `git describe`
-IMAGE_DESC = pre-installed Membase Server 1.7.2, Enterprise Edition, 64bit
+IMAGE_DESC = pre-installed Couchbase Server 1.8.0, Enterprise Edition, 64bit
 
-PKG_BASE = http://builds.hq.northscale.net/releases/1.7.2
-PKG_NAME = membase-server-enterprise_x86_64_1.7.2r-20-g6604356.rpm
-PKG_KIND = membase
-CLI_NAME = membase
+PKG_BASE = http://packages.couchbase.com/releases/1.8.0
+PKG_NAME = couchbase-server-enterprise_x86_64_1.8.0.rpm
+PKG_KIND = couchbase
+CLI_NAME = couchbase-cli
 
-SECURITY_GROUP = membase
+SECURITY_GROUP = couchbase
 
 VOLUME_ID = `grep VOLUME volume-describe.out | cut -f 2`
 VOLUME_GB = 100
