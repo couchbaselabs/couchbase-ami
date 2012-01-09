@@ -37,7 +37,7 @@ SSH onto your EC2 instance, such as by using:
 In your SSH session, you can generate test requests against the
 default bucket by running:
 
-  /opt/membase/bin/memcachetest -l
+  /opt/couchbase/bin/memcachetest -l
 
 Next, let's monitor your database performance.
 
@@ -77,5 +77,5 @@ http://www.couchbase.com
 http://www.couchbase.org/forums
 mailto:support@couchbase.com
 
-Copyright (c) 2011 Couchbase, Inc.
+Copyright (c) 2012 Couchbase, Inc.
 

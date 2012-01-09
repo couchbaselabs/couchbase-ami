@@ -21,6 +21,7 @@ IMAGE_DESC = pre-installed Membase Server 1.7.2, Enterprise Edition, 64bit
 PKG_BASE = http://builds.hq.northscale.net/releases/1.7.2
 PKG_NAME = membase-server-enterprise_x86_64_1.7.2r-20-g6604356.rpm
 PKG_KIND = membase
+CLI_NAME = membase
 
 SECURITY_GROUP = membase
 
@@ -84,9 +85,11 @@ instance-prep:
 instance-prep-pkg:
 	$(SSH_CMD) wget -O $(PKG_NAME) $(PKG_BASE)/$(PKG_NAME)
 	sed -e s,@@PKG_NAME@@,$(PKG_NAME),g README.txt.tmpl | \
-      sed -e s,@@PKG_KIND@@,$(PKG_KIND),g > README.txt.out
+      sed -e s,@@PKG_KIND@@,$(PKG_KIND),g | \
+      sed -e s,@@CLI_NAME@@,$(CLI_NAME),g > README.txt.out
 	sed -e s,@@PKG_NAME@@,$(PKG_NAME),g config-pkg.tmpl | \
-      sed -e s,@@PKG_KIND@@,$(PKG_KIND),g > config-pkg.out
+      sed -e s,@@PKG_KIND@@,$(PKG_KIND),g | \
+      sed -e s,@@CLI_NAME@@,$(CLI_NAME),g > config-pkg.out
 	chmod a+x config-pkg.out
 	scp -i ~/.ssh/$(SSH_KEY).pem README.txt.out \
       ec2-user@$(INSTANCE_HOST):/home/ec2-user/README.txt
