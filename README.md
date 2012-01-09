@@ -40,6 +40,9 @@ First, clean up from previous attempts...
 
     make clean
 
+Then, if you're making an AMI for a version number update, be sure to
+have the right tag.
+
 Then, use step 0, which should launch an new EC2 instance.
 
     make SSH_KEY=steveyen-key2 step0
@@ -55,6 +58,9 @@ You'll want to see output lines that look like...
 Then, go to the next step...
 
     make SSH_KEY=steveyen-key2 step1
+
+The previous might fail due to SSH issues.  Have patience, wait and
+try again a few time, as the instance requires time to come online.
 
 Then, go to the next step, etc...
 
@@ -79,3 +85,4 @@ permission for AWS to access it...
 
 If you're doing an updated AMI due to a new software release,
 be sure to scrub any README's for changes, etc.
+
