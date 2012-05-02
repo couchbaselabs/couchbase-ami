@@ -86,3 +86,9 @@ permission for AWS to access it...
 If you're doing an updated AMI due to a new software release,
 be sure to scrub any README's for changes, etc.
 
+To make a community edition AMI, use something like...
+
+    make IMAGE_DESC="pre-installed Couchbase Server 1.8.0, Community Edition, 64bit" \
+         PKG_NAME=couchbase-server-community_x86_64_1.8.0.rpm \
+         SSH_KEY=steveyen-key2 \
+         clean step0 step1 ...
