@@ -50,6 +50,13 @@ step4: \
     instance-cleanse \
     instance-image-create
 
+generate-key:
+	EC2_HOME=$(EC2_HOME) \
+    EC2_PRIVATE_KEY=$(EC2_PRIVATE_KEY) \
+    EC2_CERT=$(EC2_CERT) \
+    $(EC2_HOME)/bin/ec2-create-keypair ${SSH_KEY} > ${SSH_KEY}
+	cp ${SSH_KEY} ~/.ssh/
+
 instance-launch:
 	EC2_HOME=$(EC2_HOME) \
     EC2_PRIVATE_KEY=$(EC2_PRIVATE_KEY) \
