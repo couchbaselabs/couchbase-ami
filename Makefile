@@ -127,6 +127,13 @@ instance-image-create:
       --description "$(IMAGE_DESC)" \
       $(INSTANCE_ID)
 
+instance-stop:
+	EC2_HOME=$(EC2_HOME) \
+    EC2_PRIVATE_KEY=$(EC2_PRIVATE_KEY) \
+    EC2_CERT=$(EC2_CERT) \
+    EC2_URL=$(EC2_URL) \
+    $(EC2_HOME)/bin/ec2-stop-instances ${INSTANCE_ID}
+
 volume-create:
 	EC2_HOME=$(EC2_HOME) \
     EC2_PRIVATE_KEY=$(EC2_PRIVATE_KEY) \
