@@ -68,6 +68,12 @@ Then, go to the next step, etc...
     make SSH_KEY=steveyen-key2 step3
     make SSH_KEY=steveyen-key2 step4
 
+By default, couchbase 1.8.0 will be installed. Provide VERSION number to override this option.
+
+    make SSH_KEY=steveyen-key2 VERSION=1.8.1 step2
+    make SSH_KEY=steveyen-key2 step3
+    make SSH_KEY=steveyen-key2 VERSION=1.8.1 step4
+
 NOTE: If you don't want the package pre-installed on the AMI, such as
 to just get an empty-but-ready AMI for QE/testing, then just skip
 step2.
