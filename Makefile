@@ -91,6 +91,9 @@ instance-prep:
 	$(SSH_CMD) -t sudo /home/ec2-user/prep
 
 instance-prep-pkg:
+	IMAGE_DESC="pre-installed Couchbase Server ${VERSION}, Enterprise Edition, 64bit" \
+    PKG_BASE="http://packages.couchbase.com/releases/${VERSION}" \
+    PKG_NAME="couchbase-server-enterprise_x86_64_${VERSION}.rpm" \
 	$(SSH_CMD) wget -O $(PKG_NAME) $(PKG_BASE)/$(PKG_NAME)
 	sed -e s,@@PKG_NAME@@,$(PKG_NAME),g README.txt.tmpl | \
       sed -e s,@@PKG_KIND@@,$(PKG_KIND),g | \
@@ -119,6 +122,9 @@ instance-cleanse:
       /root/*~
 
 instance-image-create:
+	IMAGE_DESC="pre-installed Couchbase Server ${VERSION}, Enterprise Edition, 64bit" \
+    PKG_BASE="http://packages.couchbase.com/releases/${VERSION}" \
+    PKG_NAME="couchbase-server-enterprise_x86_64_${VERSION}.rpm" \
 	EC2_HOME=$(EC2_HOME) \
     EC2_PRIVATE_KEY=$(EC2_PRIVATE_KEY) \
     EC2_CERT=$(EC2_CERT) \
