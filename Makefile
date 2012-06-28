@@ -15,11 +15,12 @@ INSTANCE_ID   = `grep INSTANCE instance-describe.out | grep running | cut -f 2`
 SSH_KEY = steveyen-key2
 SSH_CMD = ssh -i ~/.ssh/$(SSH_KEY).pem ec2-user@$(INSTANCE_HOST)
 
+VERSION = 1.8.0
 IMAGE_NAME = `git describe`
-IMAGE_DESC = pre-installed Couchbase Server 1.8.0, Enterprise Edition, 64bit
+IMAGE_DESC = pre-installed Couchbase Server ${VERSION}, Enterprise Edition, 64bit
 
-PKG_BASE = http://packages.couchbase.com/releases/1.8.0
-PKG_NAME = couchbase-server-enterprise_x86_64_1.8.0.rpm
+PKG_BASE = http://packages.couchbase.com/releases/${VERSION}
+PKG_NAME = couchbase-server-enterprise_x86_64_${VERSION}.rpm
 PKG_KIND = couchbase
 CLI_NAME = couchbase-cli
 
