@@ -34,7 +34,8 @@ usually will live in the ~/.ssh directory on your computer.  For example, mine i
 
     ~/.ssh/steveyen-key2
 
-If you don't have an AMI compatible ssh key, run the following command to generate a new one:
+If you don't have an AMI compatible ssh key, run the following command to generate a new one
+
     make SSH_KEY=steveyen-key2 generate-key
 
 # Building the AMI...
