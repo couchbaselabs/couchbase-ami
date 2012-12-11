@@ -72,11 +72,11 @@ Then, go to the next step, etc...
     make SSH_KEY=steveyen-key2 step3
     make SSH_KEY=steveyen-key2 step4
 
-By default, couchbase 1.8.0 will be installed. Provide VERSION number to override this option.
+By default, couchbase 2.0.0 will be installed. Provide VERSION number to override this option.
 
-    make SSH_KEY=steveyen-key2 VERSION=1.8.1 step2
+    make SSH_KEY=steveyen-key2 VERSION=2.0.0 step2
     make SSH_KEY=steveyen-key2 step3
-    make SSH_KEY=steveyen-key2 VERSION=1.8.1 step4
+    make SSH_KEY=steveyen-key2 VERSION=2.0.0 step4
 
 NOTE: If you don't want the package pre-installed on the AMI, such as
 to just get an empty-but-ready AMI for QE/testing, then just skip
@@ -98,7 +98,7 @@ be sure to scrub any README's for changes, etc.
 
 To make a community edition AMI, use something like...
 
-    make IMAGE_DESC="pre-installed Couchbase Server 1.8.0, Community Edition, 64bit" \
-         PKG_NAME=couchbase-server-community_x86_64_1.8.0.rpm \
+    make IMAGE_DESC="pre-installed Couchbase Server 2.0.0, Community Edition, 64bit" \
+         PKG_NAME=couchbase-server-community_x86_64_2.0.0.rpm \
          SSH_KEY=steveyen-key2 \
          clean step0 step1 ...
