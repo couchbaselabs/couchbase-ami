@@ -4,7 +4,7 @@ if [ ! -d /opt/*base ]; then
   cd /home/ec2-user
   rpm -i *base-server-*_x86_64_*.rpm
   /opt/@@PKG_KIND@@/bin/cbenable_core_dumps.sh /tmp
-  sleep 3
+  sleep 10
   /opt/@@PKG_KIND@@/bin/@@CLI_NAME@@ cluster-init -c 127.0.0.1 \
     --cluster-init-username=Administrator \
     --cluster-init-password=`curl http://169.254.169.254/latest/meta-data/instance-id`
