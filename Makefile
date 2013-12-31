@@ -6,17 +6,21 @@ EC2_ZONE        = us-east-1c
 EC2_URL         = https://ec2.us-east-1.amazonaws.com
 
 # The seed AMI is Basic Amazon Linux 64-bit 2011.09
+#AMI_ID          = ami-28670341
 AMI_ID          = ami-7341831a
 
 INSTANCE_TYPE = m1.xlarge
 INSTANCE_HOST = `grep INSTANCE instance-describe.out | grep running | cut -f 4`
 INSTANCE_ID   = `grep INSTANCE instance-describe.out | grep running | cut -f 2`
 
-SSH_KEY = steveyen-key2
+# old amazon ami id
+OLD_INSTANCE_ID 	    = i-e67a0883
+
+SSH_KEY = ronnie-ec2-key
 SSH_CMD = ssh -i ~/.ssh/$(SSH_KEY).pem ec2-user@$(INSTANCE_HOST)
 
-VERSION = 1.8.0
-IMAGE_NAME = `git describe`
+VERSION = 2.1.1
+IMAGE_NAME = couchbase-server-enterprise_x86_64_2.1.1-1
 IMAGE_DESC = pre-installed Couchbase Server ${VERSION}, Enterprise Edition, 64bit
 
 PKG_BASE = http://packages.couchbase.com/releases/${VERSION}
@@ -27,7 +31,7 @@ CLI_NAME = couchbase-cli
 SECURITY_GROUP = couchbase
 
 VOLUME_ID = `grep VOLUME volume-describe.out | cut -f 2`
-VOLUME_GB = 100
+VOLUME_GB = 80
 
 SNAPSHOT_ID = `grep SNAPSHOT snapshot-describe.out | cut -f 2`
 
@@ -50,6 +54,12 @@ step3: \
 step4: \
     instance-cleanse \
     instance-image-create
+
+describe-image:
+	EC2_HOME=$(EC2_HOME) \
+    EC2_PRIVATE_KEY=$(EC2_PRIVATE_KEY) \
+    EC2_CERT=$(EC2_CERT) \
+    $(EC2_HOME)/bin/ec2-describe-images -o amazon --filter "image-type=kernel"
 
 generate-key:
 	EC2_HOME=$(EC2_HOME) \
@@ -93,7 +103,7 @@ instance-prep:
 instance-prep-pkg:
 	IMAGE_DESC="pre-installed Couchbase Server ${VERSION}, Enterprise Edition, 64bit" \
     PKG_BASE="http://packages.couchbase.com/releases/${VERSION}" \
-    PKG_NAME="couchbase-server-enterprise_x86_64_${VERSION}.rpm" \
+    PKG_NAME="couchbase-server-coummunity_x86_64_${VERSION}.rpm" \
 	$(SSH_CMD) wget -O $(PKG_NAME) $(PKG_BASE)/$(PKG_NAME)
 	sed -e s,@@PKG_NAME@@,$(PKG_NAME),g README.txt.tmpl | \
       sed -e s,@@PKG_KIND@@,$(PKG_KIND),g | \
@@ -121,6 +131,13 @@ instance-cleanse:
       /root/*.tmp \
       /root/*~
 
+list-amis:
+	EC2_HOME=$(EC2_HOME) \
+    EC2_PRIVATE_KEY=$(EC2_PRIVATE_KEY) \
+    EC2_CERT=$(EC2_CERT) \
+    EC2_URL=$(EC2_URL) \
+    $(EC2_HOME)/bin/ec2-stop-instances ${INSTANCE_ID}
+
 instance-image-create:
 	IMAGE_DESC="pre-installed Couchbase Server ${VERSION}, Enterprise Edition, 64bit" \
     PKG_BASE="http://packages.couchbase.com/releases/${VERSION}" \
@@ -134,12 +151,24 @@ instance-image-create:
       --description "$(IMAGE_DESC)" \
       $(INSTANCE_ID)
 
+instance-image-recreate:
+	IMAGE_DESC="pre-installed Couchbase Server ${VERSION}, Enterprise Edition, 64bit" \
+    PKG_BASE="http://packages.couchbase.com/releases/${VERSION}" \
+    PKG_NAME="couchbase-server-enterprise_x86_64_${VERSION}.rpm" \
+	EC2_HOME=$(EC2_HOME) \
+    EC2_PRIVATE_KEY=$(EC2_PRIVATE_KEY) \
+    EC2_CERT=$(EC2_CERT) \
+    EC2_URL=$(EC2_URL) \
+      $(EC2_HOME)/bin/ec2-create-image $(OLD_INSTANCE_ID) \
+      --name "$(IMAGE_NAME)" \
+      --description "$(IMAGE_DESC)"
+
 instance-stop:
 	EC2_HOME=$(EC2_HOME) \
     EC2_PRIVATE_KEY=$(EC2_PRIVATE_KEY) \
     EC2_CERT=$(EC2_CERT) \
     EC2_URL=$(EC2_URL) \
-    $(EC2_HOME)/bin/ec2-stop-instances ${INSTANCE_ID}
+    $(EC2_HOME)/bin/ec2-stop-instances $(INSTANCE_ID)
 
 volume-create:
 	EC2_HOME=$(EC2_HOME) \
@@ -175,7 +204,7 @@ volume-attach:
       $(EC2_HOME)/bin/ec2-attach-volume $(VOLUME_ID) \
       --instance $(INSTANCE_ID) \
       --device /dev/sdh
-	sleep 10
+	sleep 20
 
 volume-mkfs:
 	$(SSH_CMD) -t sudo mkfs.ext3 /dev/sdh
