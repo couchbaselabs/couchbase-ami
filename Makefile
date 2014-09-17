@@ -19,12 +19,12 @@ OLD_INSTANCE_ID 	    = i-e67a0883
 SSH_KEY = ronnie-ec2-key
 SSH_CMD = ssh -i ~/.ssh/$(SSH_KEY).pem ec2-user@$(INSTANCE_HOST)
 
-VERSION = 2.1.1
-IMAGE_NAME = couchbase-server-enterprise_x86_64_2.1.1-1
+VERSION = 3.0.0
+IMAGE_NAME = couchbase-server-enterprise_x86_64_${VERSION}-1
 IMAGE_DESC = pre-installed Couchbase Server ${VERSION}, Enterprise Edition, 64bit
 
-PKG_BASE = http://packages.couchbase.com/releases/${VERSION}
-PKG_NAME = couchbase-server-enterprise_x86_64_${VERSION}.rpm
+PKG_BASE = http://builder.hq.couchbase.com/get
+PKG_NAME = couchbase-server-enterprise_centos6_x86_64_${VERSION}-1209-rel.rpm
 PKG_KIND = couchbase
 CLI_NAME = couchbase-cli
 
@@ -101,9 +101,6 @@ instance-prep:
 	$(SSH_CMD) -t sudo /home/ec2-user/prep
 
 instance-prep-pkg:
-	IMAGE_DESC="pre-installed Couchbase Server ${VERSION}, Enterprise Edition, 64bit" \
-    PKG_BASE="http://packages.couchbase.com/releases/${VERSION}" \
-    PKG_NAME="couchbase-server-coummunity_x86_64_${VERSION}.rpm" \
 	$(SSH_CMD) wget -O $(PKG_NAME) $(PKG_BASE)/$(PKG_NAME)
 	sed -e s,@@PKG_NAME@@,$(PKG_NAME),g README.txt.tmpl | \
       sed -e s,@@PKG_KIND@@,$(PKG_KIND),g | \
@@ -139,9 +136,6 @@ list-amis:
     $(EC2_HOME)/bin/ec2-stop-instances ${INSTANCE_ID}
 
 instance-image-create:
-	IMAGE_DESC="pre-installed Couchbase Server ${VERSION}, Enterprise Edition, 64bit" \
-    PKG_BASE="http://packages.couchbase.com/releases/${VERSION}" \
-    PKG_NAME="couchbase-server-enterprise_x86_64_${VERSION}.rpm" \
 	EC2_HOME=$(EC2_HOME) \
     EC2_PRIVATE_KEY=$(EC2_PRIVATE_KEY) \
     EC2_CERT=$(EC2_CERT) \
@@ -152,9 +146,6 @@ instance-image-create:
       $(INSTANCE_ID)
 
 instance-image-recreate:
-	IMAGE_DESC="pre-installed Couchbase Server ${VERSION}, Enterprise Edition, 64bit" \
-    PKG_BASE="http://packages.couchbase.com/releases/${VERSION}" \
-    PKG_NAME="couchbase-server-enterprise_x86_64_${VERSION}.rpm" \
 	EC2_HOME=$(EC2_HOME) \
     EC2_PRIVATE_KEY=$(EC2_PRIVATE_KEY) \
     EC2_CERT=$(EC2_CERT) \
