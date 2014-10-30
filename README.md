@@ -59,6 +59,13 @@ You'll want to see output lines that look like...
 
     INSTANCE	i-936991f0	ami-7341831a	ec2-107-22-35-176.compute-1.amazonaws.com	ip-10-93-70-157.ec2.internal	running	steveyen-key2	0		m1.xlarge	2011-10-26T22:59:43+0000	us-east-1c	aki-825ea7eb			monitoring-disabled	107.22.35.176	10.93.70.157			ebs					paravirtual	xen		sg-dddbcdb4	default
 
+Note: should update EC2 instance here before preoceeding with further intallation. 
+    
+    make SSH_KEY=john-key2 instance-clean
+    make SSH_KEY=john-key2 instance-update
+
+Reboot the instance from AWS UI to get the updated instance
+
 Then, go to the next step...
 
     make SSH_KEY=steveyen-key2 step1
