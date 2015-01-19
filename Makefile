@@ -19,16 +19,17 @@ OLD_INSTANCE_ID 	    = i-e67a0883
 SSH_KEY = ronnie-ec2-key
 SSH_CMD = ssh -i ~/.ssh/$(SSH_KEY).pem ec2-user@$(INSTANCE_HOST)
 
-VERSION = 3.0.1
-IMAGE_NAME = couchbase_server_community_x86_64_${VERSION}
-IMAGE_DESC = pre-installed Couchbase Server ${VERSION}, Community Edition, 64bit
-#IMAGE_NAME = couchbase_server_enterprise_x86_64_${VERSION}
-#IMAGE_DESC = pre-installed Couchbase Server ${VERSION}, Enterprise Edition, 64bit
+VERSION = 3.0.2
+#IMAGE_NAME = couchbase_server_community_x86_64_${VERSION}
+#IMAGE_DESC = pre-installed Couchbase Server ${VERSION}, Community Edition, 64bit
+IMAGE_NAME = couchbase_server_enterprise_x86_64_${VERSION}
+IMAGE_DESC = pre-installed Couchbase Server ${VERSION}, Enterprise Edition, 64bit
 
 #PKG_BASE = http://builder.hq.couchbase.com/get
 PKG_BASE = http://packages.couchbase.com/releases/${VERSION}
-PKG_NAME = couchbase-server-community-${VERSION}-centos6.x86_64.rpm
-#PKG_NAME = couchbase-server-enterprise_centos6_x86_64_${VERSION}-1209-rel.rpm
+#PKG_NAME = couchbase-server-community-${VERSION}-centos6.x86_64.rpm
+PKG_NAME = couchbase-server-enterprise-${VERSION}-centos6.x86_64.rpm
+#PKG_NAME = couchbase-server-enterprise_centos6_x86_64_${VERSION}-rel.rpm
 PKG_KIND = couchbase
 CLI_NAME = couchbase-cli
 
@@ -126,7 +127,6 @@ instance-prep-pkg:
 	$(SSH_CMD) -t sudo mkdir -p /var/lib/cloud/data/scripts
 	$(SSH_CMD) -t sudo cp /home/ec2-user/config-pkg /var/lib/cloud/data/scripts/config-pkg
 	$(SSH_CMD) -t sudo chown root:root /var/lib/cloud/data/scripts/config-pkg
-	$(SSH_CMD) -t sudo rpm --install $(PKG_NAME)
 
 instance-cleanse:
 	$(SSH_CMD) -t sudo rm -f \
@@ -179,7 +179,8 @@ volume-create:
     EC2_URL=$(EC2_URL) \
       $(EC2_HOME)/bin/ec2-create-volume \
       --availability-zone $(EC2_ZONE) \
-      --size $(VOLUME_GB) > volume-describe.out
+      --size $(VOLUME_GB) > volume-describe.out \
+    sleep 20
 
 volume-create-from-snapshot:
 	EC2_HOME=$(EC2_HOME) \
@@ -227,4 +228,3 @@ snapshot-create:
 
 clean:
 	rm -f *.out
-
