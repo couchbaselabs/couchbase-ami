@@ -44,19 +44,24 @@ step0: \
     instance-launch
 
 step1: \
+    instance-describe \
+    instance-clean \
+    instance-update
+ 
+step2: \
     instance-prep
 
-step2: \
+step3: \
     instance-prep-pkg
 
-step3: \
+step4: \
     volume-create \
     volume-attach \
     volume-mkfs \
     snapshot-create \
     volume-mount
 
-step4: \
+step5: \
     instance-cleanse \
     instance-image-create
 
@@ -180,7 +185,7 @@ volume-create:
       $(EC2_HOME)/bin/ec2-create-volume \
       --availability-zone $(EC2_ZONE) \
       --size $(VOLUME_GB) > volume-describe.out \
-    sleep 20
+	sleep 20
 
 volume-create-from-snapshot:
 	EC2_HOME=$(EC2_HOME) \
