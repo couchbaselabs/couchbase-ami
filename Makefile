@@ -2,14 +2,17 @@
 EC2_HOME        = ./ec2-api-tools-1.4.4.2
 EC2_PRIVATE_KEY = ~/.ec2/couchbase_aws-marketplace/pk-RPGT6DCSVXNK5QWMHAACI3KUHN5ILKOX.pem
 EC2_CERT        = ~/.ec2/couchbase_aws-marketplace/cert-RPGT6DCSVXNK5QWMHAACI3KUHN5ILKOX.pem
-EC2_ZONE        = us-east-1c
+EC2_ZONE        = us-east-1a
 EC2_URL         = https://ec2.us-east-1.amazonaws.com
 
-# The seed AMI is Basic Amazon Linux 64-bit 2011.09
-#AMI_ID          = ami-28670341
-AMI_ID          = ami-7341831a
+# The seed AMI is Basic Amazon Linux 64-bit 
+#2011.09/PV
+#AMI_ID         = ami-7341831a
 
-INSTANCE_TYPE = m1.xlarge
+#2015.03/HVM
+AMI_ID          = ami-1ecae776
+
+INSTANCE_TYPE = m3.xlarge
 INSTANCE_HOST = `grep INSTANCE instance-describe.out | grep running | cut -f 4`
 INSTANCE_ID   = `grep INSTANCE instance-describe.out | grep running | cut -f 2`
 
@@ -19,17 +22,18 @@ OLD_INSTANCE_ID 	    = i-e67a0883
 SSH_KEY = ronnie-ec2-key
 SSH_CMD = ssh -i ~/.ssh/$(SSH_KEY).pem ec2-user@$(INSTANCE_HOST)
 
-VERSION = 3.0.2
+VERSION = 3.0.3
 #IMAGE_NAME = couchbase_server_community_x86_64_${VERSION}
 #IMAGE_DESC = pre-installed Couchbase Server ${VERSION}, Community Edition, 64bit
-IMAGE_NAME = couchbase_server_enterprise_x86_64_${VERSION}
+IMAGE_NAME = couchbase_server_enterprise_x86_64__${VERSION}
 IMAGE_DESC = pre-installed Couchbase Server ${VERSION}, Enterprise Edition, 64bit
 
-#PKG_BASE = http://builder.hq.couchbase.com/get
-PKG_BASE = http://packages.couchbase.com/releases/${VERSION}
+PKG_BASE = http://latestbuilds.hq.couchbase.com
+#PKG_BASE = http://packages.couchbase.com/releases/${VERSION}
 #PKG_NAME = couchbase-server-community-${VERSION}-centos6.x86_64.rpm
-PKG_NAME = couchbase-server-enterprise-${VERSION}-centos6.x86_64.rpm
+#PKG_NAME = couchbase-server-enterprise-${VERSION}-centos6.x86_64.rpm
 #PKG_NAME = couchbase-server-enterprise_centos6_x86_64_${VERSION}-rel.rpm
+PKG_NAME = couchbase-server-enterprise_x86_64_${VERSION}-1716-rel.rpm
 PKG_KIND = couchbase
 CLI_NAME = couchbase-cli
 
@@ -184,7 +188,7 @@ volume-create:
     EC2_URL=$(EC2_URL) \
       $(EC2_HOME)/bin/ec2-create-volume \
       --availability-zone $(EC2_ZONE) \
-      --size $(VOLUME_GB) > volume-describe.out \
+      --size $(VOLUME_GB) > volume-describe.out
 	sleep 20
 
 volume-create-from-snapshot:
