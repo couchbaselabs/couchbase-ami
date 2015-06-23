@@ -51,6 +51,12 @@ Then, use step 0, which should launch an new EC2 instance.
 
     make SSH_KEY=steveyen-key2 step0
 
+use step 1 could update the seed AMI for you. 
+
+    make SSH_KEY=steveyen-key2 step1
+    
+Alternatively, you could config it manully, or jump to step 2
+
 If that takes longer than usual (because EC2 cloud is impacted), then repeat the following command untill you finally see some ec2-xxxxxx.compute-1.amazonaws.com addresses in the output...
 
     make SSH_KEY=steveyen-key2 instance-describe
@@ -64,14 +70,10 @@ Note: should update EC2 instance here before preoceeding with further installati
     make SSH_KEY=john-key2 instance-clean
     make SSH_KEY=john-key2 instance-update
 
-Reboot the instance from AWS UI to get the updated instance
-
-Then, go to the next step...
-
-    make SSH_KEY=steveyen-key2 step1
-
 The previous might fail due to SSH issues.  Have patience, wait and
 try again a few time, as the instance requires time to come online.
+
+Reboot the instance from AWS UI to get the updated instance
 
 Then, go to the next step, etc...
 
@@ -84,6 +86,8 @@ By default, couchbase 2.0.0 will be installed. Provide VERSION number to overrid
     make SSH_KEY=steveyen-key2 VERSION=2.0.0 step2
     make SSH_KEY=steveyen-key2 step3
     make SSH_KEY=steveyen-key2 VERSION=2.0.0 step4
+
+NOTE: Skip step 4 to create image only without volumne attached to the AMI
 
 NOTE: If you don't want the package pre-installed on the AMI, such as
 to just get an empty-but-ready AMI for QE/testing, then just skip
