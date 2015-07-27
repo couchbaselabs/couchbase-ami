@@ -22,7 +22,7 @@ OLD_INSTANCE_ID 	    = i-e67a0883
 SSH_KEY = ronnie-ec2-key
 SSH_CMD = ssh -i ~/.ssh/$(SSH_KEY).pem ec2-user@$(INSTANCE_HOST)
 
-VERSION = 3.0.3
+VERSION = 3.1.0
 #IMAGE_NAME = couchbase_server_community_x86_64_${VERSION}
 #IMAGE_DESC = pre-installed Couchbase Server ${VERSION}, Community Edition, 64bit
 IMAGE_NAME = couchbase_server_enterprise_x86_64__${VERSION}
@@ -33,7 +33,7 @@ PKG_BASE = http://latestbuilds.hq.couchbase.com
 #PKG_NAME = couchbase-server-community-${VERSION}-centos6.x86_64.rpm
 #PKG_NAME = couchbase-server-enterprise-${VERSION}-centos6.x86_64.rpm
 #PKG_NAME = couchbase-server-enterprise_centos6_x86_64_${VERSION}-rel.rpm
-PKG_NAME = couchbase-server-enterprise_x86_64_${VERSION}-1716-rel.rpm
+PKG_NAME = couchbase-server-enterprise_x86_64_${VERSION}-1776-rel.rpm
 PKG_KIND = couchbase
 CLI_NAME = couchbase-cli
 
