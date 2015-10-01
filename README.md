@@ -79,15 +79,15 @@ Then, go to the next step, etc...
 
     make SSH_KEY=steveyen-key2 step2
     make SSH_KEY=steveyen-key2 step3
-    make SSH_KEY=steveyen-key2 step4
+    make SSH_KEY=steveyen-key2 step5
 
 By default, couchbase 2.0.0 will be installed. Provide VERSION number to override this option.
 
     make SSH_KEY=steveyen-key2 VERSION=2.0.0 step2
     make SSH_KEY=steveyen-key2 step3
-    make SSH_KEY=steveyen-key2 VERSION=2.0.0 step4
+    make SSH_KEY=steveyen-key2 VERSION=2.0.0 step5
 
-NOTE: Skip step 4 to create image only without volumne attached to the AMI
+NOTE: Skip step 4 to create image only without volume attached to the AMI
 
 NOTE: If you don't want the package pre-installed on the AMI, such as
 to just get an empty-but-ready AMI for QE/testing, then just skip
