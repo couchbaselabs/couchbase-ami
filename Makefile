@@ -146,10 +146,12 @@ instance-prep-pkg:
 	$(SSH_CMD) -t sudo cp /home/ec2-user/config-pkg /var/lib/cloud/data/scripts/config-pkg
 	$(SSH_CMD) -t sudo chown root:root /var/lib/cloud/data/scripts/config-pkg
 
-instance-install_extra:
-        $(SSH_CMD) wget https://s3.amazonaws.com/scratch_bucket/Couchbaseinit.sh 
-        $(SSH_CMD) wget https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.amzn1.noarch.rpm
-	$(SSH_CMD) rpm -ivh aws-cfn-bootstrap-latest.amzn1.noarch.rpm
+instance-install-extra:
+        $(SSH_CMD) wget -O https://s3.amazonaws.com/scratch_bucket/Couchbaseinit.sh
+        $(SSH_CMD) -t sudo cp /home/ec2-user/Couchbaseinit.sh /var/lib/cloud/data/scripts/ | \
+      $(SSH_CMD) wget https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.amzn1.noarch.rpm | \
+      $(SSH_CMD) rpm -ivh aws-cfn-bootstrap-latest.amzn1.noarch.rpm
+
 
 instance-cleanse:
 	$(SSH_CMD) -t sudo rm -f \
