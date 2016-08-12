@@ -17,7 +17,7 @@ AMI_ID = ami-76817c1e
 
 #INSTANCE_TYPE = m1.xlarge
 # for HVM type, use m3.xlarge
-INSTANCE_TYPE = m3.xlarge
+INSTANCE_TYPE = i2.xlarge
 INSTANCE_HOST = `grep INSTANCE instance-describe.out | grep 'sandip2-ami' | cut -f 4`
 INSTANCE_ID   = `grep INSTANCE instance-describe.out | grep 'sandip2-ami' | cut -f 2`
 
@@ -64,8 +64,7 @@ step2: \
     instance-prep
 
 step3: \
-    instance-prep-pkg \
-    instance-install-extra
+    instance-prep-pkg 
 
 step4: \
     volume-create \
@@ -130,7 +129,9 @@ instance-prep:
 	$(SSH_CMD) -t sudo /home/ec2-user/prep
 
 instance-prep-pkg:
-	$(SSH_CMD) wget -O $(PKG_NAME) $(PKG_BASE)/$(PKG_NAME)
+	$(SSH_CMD) wget https://s3.amazonaws.com/scratch_bucket/Couchbaseinit.sh | \
+	$(SSH_CMD) curl -O https://bootstrap.pypa.io/get-pip.py | \
+        $(SSH_CMD) wget -O $(PKG_NAME) $(PKG_BASE)/$(PKG_NAME)
 	sed -e s,@@PKG_NAME@@,$(PKG_NAME),g README.txt.tmpl | \
       sed -e s,@@PKG_KIND@@,$(PKG_KIND),g | \
       sed -e s,@@CLI_NAME@@,$(CLI_NAME),g > README.txt.out
@@ -144,14 +145,15 @@ instance-prep-pkg:
       ec2-user@$(INSTANCE_HOST):/home/ec2-user/config-pkg
 	$(SSH_CMD) -t sudo mkdir -p /var/lib/cloud/data/scripts
 	$(SSH_CMD) -t sudo cp /home/ec2-user/config-pkg /var/lib/cloud/data/scripts/config-pkg
-	$(SSH_CMD) -t sudo chown root:root /var/lib/cloud/data/scripts/config-pkg
-
-instance-install-extra:
-        $(SSH_CMD) wget -O https://s3.amazonaws.com/scratch_bucket/Couchbaseinit.sh
-        $(SSH_CMD) -t sudo cp /home/ec2-user/Couchbaseinit.sh /var/lib/cloud/data/scripts/ | \
-      $(SSH_CMD) wget https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.amzn1.noarch.rpm | \
-      $(SSH_CMD) rpm -ivh aws-cfn-bootstrap-latest.amzn1.noarch.rpm
-
+	$(SSH_CMD) -t sudo chown root:root /var/lib/cloud/data/scripts/config-pkg | \
+	$(SSH_CMD) -t sudo cp /home/ec2-user/Couchbaseinit.sh /var/lib/cloud/data/scripts/Couchbaseinit.sh | \
+        $(SSH_CMD) -t sudo chown root:root /home/ec2-user/Couchbaseinit.sh | \
+        $(SSH_CMD) -t sudo chown root:root /home/ec2-user/get-pip.py | \
+	$(SSH_CMD) -t sudo chmod a+x /home/ec2-user/Couchbaseinit.sh | \
+	$(SSH_CMD) -t sudo python27 /home/ec2-user/get-pip.py | \
+        $(SSH_CMD) -t sudo sleep 60 | \
+	$(SSH_CMD) -t sudo /usr/local/bin/pip install awscli | \
+        $(SSH_CMD) -t sudo ln -s /usr/bin/aws /usr/local/bin/aws
 
 instance-cleanse:
 	$(SSH_CMD) -t sudo rm -f \
