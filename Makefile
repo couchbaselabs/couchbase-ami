@@ -129,7 +129,7 @@ instance-prep:
 	$(SSH_CMD) -t sudo /home/ec2-user/prep
 
 instance-prep-pkg:
-	$(SSH_CMD) wget https://s3.amazonaws.com/scratch_bucket/Couchbaseinit.sh | \
+	$(SSH_CMD) https://s3.amazonaws.com/couchbasescript/Couchbaseinit.sh | \
 	$(SSH_CMD) curl -O https://bootstrap.pypa.io/get-pip.py | \
         $(SSH_CMD) wget -O $(PKG_NAME) $(PKG_BASE)/$(PKG_NAME)
 	sed -e s,@@PKG_NAME@@,$(PKG_NAME),g README.txt.tmpl | \

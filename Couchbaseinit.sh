@@ -213,7 +213,9 @@ do
 	KNOWN_NODES="ns_1@"$(echo ${MYIP}),${KNOWN_NODES}
 done
 
+sleep 60
 COMMAND=$(echo curl -v -u ${ADMIN}:${PASSWORD} -X POST "http://$MASTER_DNS:8091/controller/rebalance" -d  "knownNodes=${KNOWN_NODES}")
+echo ${COMMAND}
 ${COMMAND}
 
 

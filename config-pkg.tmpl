@@ -5,11 +5,6 @@ if [ ! -d /opt/*base ]; then
   rpm -i couchbase-server-enterprise-4.0.0-4051-centos6.x86_64.rpm
   /opt/@@PKG_KIND@@/bin/cbenable_core_dumps.sh /tmp
   sleep 30
-  /opt/@@PKG_KIND@@/bin/@@CLI_NAME@@ cluster-init -c 127.0.0.1 \
-    --cluster-init-username=Administrator \
-    --cluster-ramsize=300 \
-    --cluster-init-password=`curl http://169.254.169.254/latest/meta-data/instance-id`
-  sleep 30
   /etc/init.d/@@PKG_KIND@@-server stop
   mkdir -p /mnt/ebs/db
   chown @@PKG_KIND@@:@@PKG_KIND@@ /mnt/ebs/db
