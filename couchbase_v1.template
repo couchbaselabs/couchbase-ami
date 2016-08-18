@@ -151,7 +151,7 @@
 				"AMI": ""
 			},
 			"us-east-1": {
-				"AMI": "ami-b3d34aa4"
+				"AMI": "ami-30513527"
 			},
 			"sa-east-1": {
 				"AMI": ""
