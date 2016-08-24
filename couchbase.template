@@ -50,7 +50,7 @@
 			"Description": "Name of an existing EC2 KeyPair. CouchbaseNodes instance will launch with this KeyPair."
 		},
 		"CouchbaseInstanceType": {
-			"Description": "Amazon EC2 instance type for Couchbase Data Nodes.",
+			"Description": "Amazon EC2 instance type for Couchbase Nodes.",
 			"Type": "String",
 			"Default": "i2.xlarge",
 			"AllowedValues": [
@@ -68,7 +68,7 @@
 		},
 
 		"CouchbaseServerCount": {
-			"Description": "Number of Couchbase Data Nodes",
+			"Description": "Number of Couchbase Nodes",
 			"Type": "String",
 			"Default": "3",
 			"AllowedValues": [
@@ -698,7 +698,7 @@
 			"Properties": {
 				"Tags": [{
 					"Key": "Name",
-					"Value": "Couchbase (CouchbaseServers)",
+					"Value": "Couchbase Servers",
 					"PropagateAtLaunch": "true"
 				}],
 				"LaunchConfigurationName": {
@@ -722,8 +722,15 @@
 						"GroupMinSize",
 						"GroupMaxSize"
 					]
-				}]
+				}],
+                               "PlacementGroup": {“Ref”: “DBPlacementGroup”}
 			},
+                        "DBPlacementGroup": {
+                                                "Properties": {
+                                                                "Strategy": "cluster"
+                                                },
+                                                "Type": "AWS::EC2::PlacementGroup"
+                         },
 			"CreationPolicy": {
 				"ResourceSignal": {
 					"Timeout": "PT3600M",
