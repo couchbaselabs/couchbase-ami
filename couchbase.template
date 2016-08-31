@@ -32,7 +32,7 @@
 			"Description": "Password for Admin user.",
 			"Type": "String",
 			"MinLength": "7",
-			"AllowedPattern": "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9\\s]).{7,}"
+			"AllowedPattern": "^[a-zA-Z0-9]{6,}"
 		},
 
 
@@ -781,6 +781,8 @@
 						"Fn::Join": [
 							"", [
 								"#!/bin/bash -xe\n",
+								"sleep 240",
+								"\n",
 								"cd /home/ec2-user",
 								"\n",
 								"/bin/sh Couchbaseinit.sh ",
