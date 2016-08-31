@@ -207,6 +207,12 @@
 				}]
 			}
 		},
+		 "DBPlacementGroup": {
+                "Properties": {
+                                "Strategy": "cluster"
+                            },
+                "Type": "AWS::EC2::PlacementGroup"
+          },
 		"VPC": {
 			"Type": "AWS::EC2::VPC",
 			"Properties": {
@@ -692,7 +698,7 @@
 				}]
 			}
 		},
-
+       
 		"CouchbaseServerGroup": {
 			"Type": "AWS::AutoScaling::AutoScalingGroup",
 			"Properties": {
@@ -716,6 +722,7 @@
 				"VPCZoneIdentifier": [{
 					"Ref": "PublicSubnet"
 				}],
+
 				"MetricsCollection": [{
 					"Granularity": "1Minute",
 					"Metrics": [
@@ -723,14 +730,9 @@
 						"GroupMaxSize"
 					]
 				}],
-                               "PlacementGroup": {“Ref”: “DBPlacementGroup”}
+                "PlacementGroup": {"Ref": "DBPlacementGroup"}
 			},
-                        "DBPlacementGroup": {
-                                                "Properties": {
-                                                                "Strategy": "cluster"
-                                                },
-                                                "Type": "AWS::EC2::PlacementGroup"
-                         },
+           
 			"CreationPolicy": {
 				"ResourceSignal": {
 					"Timeout": "PT3600M",
@@ -798,9 +800,13 @@
 								"         --region ", {
 									"Ref": "AWS::Region"
 								},
+								"\n",
+								"aws ec2 create-tags --resources ami-30513527 --tags Key=",
+								{
+									"Ref": "AWS::StackName"
+								}, 
+								"Value=production",
 								"\n"
-
-
 							]
 						]
 					}
