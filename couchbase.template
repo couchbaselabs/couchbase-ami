@@ -151,7 +151,7 @@
 				"AMI": ""
 			},
 			"us-east-1": {
-				"AMI": "ami-722e4665"
+				"AMI": "ami-30513527"
 			},
 			"sa-east-1": {
 				"AMI": ""
@@ -782,8 +782,6 @@
 							"", [
 								"#!/bin/bash -xe\n",
 								"\n",
-								"sleep 120",
-								"\n",
 								"sudo service couchbase-server status",
 								"\n",
 								"cd /home/ec2-user",
@@ -805,12 +803,6 @@
 								"         --region ", {
 									"Ref": "AWS::Region"
 								},
-								"\n",
-								"aws ec2 create-tags --resources ami-722e4665 --tags Key=",
-								{
-									"Ref": "AWS::StackName"
-								}, 
-								"Value=production",
 								"\n"
 							]
 						]
