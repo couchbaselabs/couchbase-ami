@@ -151,7 +151,7 @@
 				"AMI": ""
 			},
 			"us-east-1": {
-				"AMI": "ami-30513527"
+				"AMI": "ami-722e4665"
 			},
 			"sa-east-1": {
 				"AMI": ""
@@ -781,11 +781,14 @@
 						"Fn::Join": [
 							"", [
 								"#!/bin/bash -xe\n",
-								"sleep 240",
+								"\n",
+								"sleep 120",
+								"\n",
+								"sudo service couchbase-server status",
 								"\n",
 								"cd /home/ec2-user",
 								"\n",
-								"/bin/sh Couchbaseinit.sh ",
+								"/bin/sh -x Couchbaseinit.sh ",
 								" -u ", {
 									"Ref": "Admin"
 								},
@@ -803,7 +806,7 @@
 									"Ref": "AWS::Region"
 								},
 								"\n",
-								"aws ec2 create-tags --resources ami-30513527 --tags Key=",
+								"aws ec2 create-tags --resources ami-722e4665 --tags Key=",
 								{
 									"Ref": "AWS::StackName"
 								}, 
