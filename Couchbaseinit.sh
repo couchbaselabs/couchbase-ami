@@ -188,6 +188,7 @@ do
 		curl -v -X POST http://$MASTER_DNS:8091/pools/default -d memoryQuota=300 -d indexMemoryQuota=300
 		curl -v http://$MASTER_DNS:8091/node/controller/setupServices -d services=kv%2Cn1ql%2Cindex
 		curl -v http://$MASTER_DNS:8091/settings/web -d port=8091 -d username=${ADMIN} -d password=${PASSWORD}
+		sleep 60
 		#curl -v -u ${ADMIN}:${PASSWORD} -X POST http://$MASTER_DNS:8091/sampleBuckets/install -d '["travel-sample"]'		
 	else
 		WORKER_DNS=${INSTANCE2DNS[${id}]}
@@ -195,6 +196,11 @@ do
 		PARAMETER="hostname=${WORKER_IP}&user=${ADMIN}&password=${PASSWORD}"
 		curl -v http://$WORKER_DNS:8091/node/controller/setupServices -d services=kv%2Cn1ql%2Cindex
                 curl -v http://$WORKER_DNS:8091/settings/web -d port=8091 -d username=${ADMIN} -d password=${PASSWORD}
+        curl -u ${ADMIN}:${PASSWORD}  http://$WORKER_DNS:8091/pools/default
+        curl -u ${ADMIN}:${PASSWORD}  http://$MASTER_DNS:8091/pools/default 
+        curl -u ${ADMIN}:${PASSWORD}  http://$WORKER_DNS:8091/pools/default/buckets/  
+        curl -u ${ADMIN}:${PASSWORD}  http://$MASTER_DNS:8091/pools/default/buckets/      
+        sleep 120        
         COMMAND=$(echo curl -u ${ADMIN}:${PASSWORD} "http://${MASTER_DNS}:8091/controller/addNode" -d ${PARAMETER})
         echo ${COMMAND}
         ${COMMAND}
@@ -206,6 +212,7 @@ done
 #       Rebalance Couchbase nodes
 # ------------------------------------------------------------------
 
+
 KNOWN_NODES=
 for id in ${INSTANCES_IN_ASG}
 do
@@ -216,7 +223,10 @@ done
 sleep 120
 COMMAND=$(echo curl -v -u ${ADMIN}:${PASSWORD} -X POST "http://$MASTER_DNS:8091/controller/rebalance" -d  "knownNodes=${KNOWN_NODES}")
 echo ${COMMAND}
+sleep 60
 ${COMMAND}
+curl -u ${ADMIN}:${PASSWORD} "http://$MASTER_DNS:8091/pools/default/rebalanceProgress"
+curl -u ${ADMIN}:${PASSWORD} "http://$MASTER_DNS:8091/pools/default/tasks"
 
 
 

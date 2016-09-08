@@ -151,7 +151,7 @@
 				"AMI": ""
 			},
 			"us-east-1": {
-				"AMI": "ami-30513527"
+				"AMI": "ami-dbea9ecc"
 			},
 			"sa-east-1": {
 				"AMI": ""
@@ -780,13 +780,11 @@
 					"Fn::Base64": {
 						"Fn::Join": [
 							"", [
-								"#!/bin/bash -xe\n",
-								"\n",
-								"sudo service couchbase-server status",
+								"#!/bin/bash -xe\n",	
 								"\n",
 								"cd /home/ec2-user",
 								"\n",
-								"/bin/sh -x Couchbaseinit.sh ",
+								"/bin/sh Couchbaseinit.sh ",
 								" -u ", {
 									"Ref": "Admin"
 								},
