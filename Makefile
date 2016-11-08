@@ -1,8 +1,8 @@
 
 # EC2_HOME        = ./ec2-api-tools-1.4.4.2 this is old one
 EC2_HOME        = ./ec2-api-tools-1.7.5.1
-AWS_ACCESS_KEY = AKIAJUDQ2BJVGVXZWJHA
-AWS_SECRET_KEY = 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
+AWS_ACCESS_KEY = 
+AWS_SECRET_KEY = 
 EC2_ZONE        = us-east-1a
 EC2_URL         = https://ec2.us-east-1.amazonaws.com
 
