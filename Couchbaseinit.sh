@@ -196,10 +196,6 @@ do
 		PARAMETER="hostname=${WORKER_IP}&user=${ADMIN}&password=${PASSWORD}"
 		curl -v http://$WORKER_DNS:8091/node/controller/setupServices -d services=kv%2Cn1ql%2Cindex
                 curl -v http://$WORKER_DNS:8091/settings/web -d port=8091 -d username=${ADMIN} -d password=${PASSWORD}
-        curl -u ${ADMIN}:${PASSWORD}  http://$WORKER_DNS:8091/pools/default
-        curl -u ${ADMIN}:${PASSWORD}  http://$MASTER_DNS:8091/pools/default 
-        curl -u ${ADMIN}:${PASSWORD}  http://$WORKER_DNS:8091/pools/default/buckets/  
-        curl -u ${ADMIN}:${PASSWORD}  http://$MASTER_DNS:8091/pools/default/buckets/      
         sleep 120        
         COMMAND=$(echo curl -u ${ADMIN}:${PASSWORD} "http://${MASTER_DNS}:8091/controller/addNode" -d ${PARAMETER})
         echo ${COMMAND}
