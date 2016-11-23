@@ -157,7 +157,7 @@
 				"AMI": ""
 			},
 			"us-east-1": {
-				"AMI": "ami-dbea9ecc"
+				"AMI": "ami-0b56661c"
 			},
 			"sa-east-1": {
 				"AMI": ""
@@ -797,8 +797,10 @@
 								" -p ", "'", {
 									"Ref": "Password"
 								}, "'",
+								" -d  ", "3",
+								" -i  ", "1", 
+								" -q  ", "1",
 								"\n",
-
 								"/opt/aws/bin/cfn-signal -e $? ",
 								"         --stack ", {
 									"Ref": "AWS::StackName"
