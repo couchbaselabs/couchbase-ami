@@ -1,7 +1,7 @@
 import os
 import time
 
-debug = 0
+debug = 1
 
 
 def execute(args):
@@ -36,18 +36,26 @@ def add_node( username, password, master_ip, slave_ip, service):
                 ' -d "hostname={3}&user={4}&password={5}" -d "services={6}"'.format(username, password,
                                                                                     master_ip, slave_ip, username, password, service)
     execute(args)
-    time.sleep(10)
+    time.sleep(20)
 
 
 def rebalance(username, password, master, slaves):
     print 'performing rebalance operation'
     tmp_slaves = slaves
     tmp_slaves.append(master)
-    known_nodes = '%2C'.join([ 'ns_1%40' + s for s in tmp_slaves])
+    known_nodes = ','.join([ 'ns_1@' + s for s in tmp_slaves])
     args = "curl -v -u {0}:{1} -X POST 'http://{2}:8091/controller/rebalance' \
 -d 'knownNodes={3}'".format(username, password, master,known_nodes)
     execute(args)
 
+    args = "/opt/couchbase/bin/couchbase-cli rebalance -c {0}:8091 -u {1} -p {2}".format(master, username, password)
+    execute(args)
+
+
+def rename(master, username, password):
+    args = "curl -v -X POST -u  {0}:{1}  http://{2}:8091/node/controller/rename -d hostname={3}".\
+        format(username, password, master, master)
+    execute(args)
 
 def read_file():
     instance = {}
@@ -76,11 +84,22 @@ def main():
     uname = instance["USER_NAME"]
     passwd = instance["PASSWORD"]
 
-    i = 0
     data = int(instance["DATA_NODE"])
     query = int(instance["QUERY_NODE"])
     index = int(instance["INDEX_NODE"])
 
+    """
+     setup username, password
+    """
+    for ip in instance["slave"]:
+        setup_uname_pass(uname, passwd, ip)
+
+    setup_uname_pass(uname, passwd, master_ip)
+    rename(master_ip, uname, passwd)
+
+    """
+     setup service
+    """
     setup_service(uname, passwd, master_ip, 'kv')
     data -= 1
     for ip in instance["slave"]:
@@ -96,15 +115,6 @@ def main():
             add_node(uname, passwd, master_ip, ip, 'n1ql')
             query -= 1
             continue
-
-
-    """
-     setup username, password
-    """
-    for ip in instance["slave"]:
-        setup_uname_pass(uname, passwd, ip)
-
-    setup_uname_pass(uname, passwd, master_ip)
 
     rebalance(uname, passwd, master_ip,instance["slave"])
 
